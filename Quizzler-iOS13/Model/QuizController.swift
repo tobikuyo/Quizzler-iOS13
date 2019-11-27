@@ -23,5 +23,40 @@ struct QuizController {
         Quiz(q: "The loudest sound produced by any animal is 188 decibels. That animal is the African Elephant.", a: "False"),
         Quiz(q: "No piece of square dry paper can be folded in half more than 7 times.", a: "False"),
         Quiz(q: "Chocolate affects a dog's heart and nervous system; a few ounces are enough to kill a small dog.", a: "True")
-]
+    ]
+    
+    var questionNumber = 0
+    var score = 0
+    
+    mutating func checkAnswer(_ userAnswer: String) -> Bool {
+        if userAnswer == questions[questionNumber].answer {
+            score += 1
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func getScore() -> Int {
+        return score
+    }
+    
+    func getQuestionText() -> String {
+        return questions[questionNumber].question
+    }
+    
+    func getProgress() -> Float {
+        return Float(questionNumber + 1) / Float(questions.count)
+    }
+    
+    
+    
+    mutating func nextQuestion() {
+        if questionNumber + 1 < questions.count {
+            questionNumber += 1
+        } else {
+            questionNumber = 0
+            score = 0
+        }
+    }
 }

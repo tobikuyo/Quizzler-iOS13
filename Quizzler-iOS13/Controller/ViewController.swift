@@ -14,9 +14,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var trueButton: UIButton!
     @IBOutlet weak var falseButton: UIButton!
+    @IBOutlet weak var scoreLabel: UILabel!
     
-    let quiz = QuizController()
-    var questionNumber = 0
+    var quiz = QuizController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,32 +26,26 @@ class ViewController: UIViewController {
     
     @IBAction func answerButtonPressed(_ sender: UIButton) {
         
-        let userAnswer = sender.currentTitle
-        let actualAnswer = quiz.questions[questionNumber].answer
+        let userAnswer = sender.currentTitle!
+        let userGotItRight = quiz.checkAnswer(userAnswer)
         
-        if userAnswer == actualAnswer {
+        if userGotItRight {
             sender.backgroundColor = UIColor.green
         } else {
             sender.backgroundColor = UIColor.red
         }
         
-        if questionNumber + 1 < quiz.questions.count {
-            questionNumber += 1
-            progressBar.progress = Float(questionNumber) / Float(quiz.questions.count)
-        } else {
-            questionNumber = 0
-        }
+        quiz.nextQuestion()
         
         Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateQuestion), userInfo: nil, repeats: false)
     }
     
-   
-    
-    @ objc func updateQuestion() {
-        
-        questionLabel.text = quiz.questions[questionNumber].question
+    @objc func updateQuestion() {
+        questionLabel.text = quiz.getQuestionText()
+        progressBar.progress = quiz.getProgress()
+        scoreLabel.text = "Score: \(quiz.getScore())"
         trueButton.backgroundColor = UIColor.clear
         falseButton.backgroundColor = UIColor.clear
     }
 }  
-
+                
